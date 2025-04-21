@@ -111,16 +111,12 @@ func processSales(sales []Sale) {
 }
 
 func main() {
-	/*
-		if len(os.Args) < 2 {
-			fmt.Println("Uso: go run main.go <arquivo.csv>")
-			return
-		}
+	if len(os.Args) < 2 {
+		fmt.Println("Uso: go run main.go <arquivo.csv>")
+		return
+	}
 
-		sales, err := parseCSV(os.Args[1])
-	*/
-
-	sales, err := parseCSV("vendas.csv")
+	sales, err := parseCSV(os.Args[1])
 
 	if err != nil {
 		fmt.Println("Erro ao processar CSV:", err)
