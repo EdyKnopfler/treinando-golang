@@ -16,16 +16,17 @@ func main() {
 	db.AutoMigrate(&agenda.Cliente{})
 	db.AutoMigrate(&agenda.Apontamento{})
 
-	testeAgenda := agenda.Agenda{
-		Nome: "Agenda Teste",
-	}
+	db.Transaction(func(tx *gorm.DB) error {
+		testeAgenda := agenda.Agenda{
+			Nome: "Agenda Teste",
+		}
 
-	cliente := agenda.Cliente{
-		Nome: "ZimTom",
-	}
+		cliente := agenda.Cliente{
+			Nome: "ZimTom",
+		}
 
-	db.Create(&testeAgenda)
-	db.Create(&cliente)
-
-	db.Commit()
+		tx.Create(&testeAgenda)
+		tx.Create(&cliente)
+		return nil
+	})
 }

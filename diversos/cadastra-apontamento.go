@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"time"
 
 	"com.derso/testify/agenda"
@@ -20,19 +21,23 @@ func main() {
 
 	idCliente := uint64(1)
 	idAgenda := uint64(1)
-
-	var cliente agenda.Cliente
-	db.First(&cliente, idCliente)
-
 	loc, _ := time.LoadLocation("America/Sao_Paulo")
 
-	apontamento := agenda.Apontamento{
-		Inicio:   time.Date(2025, time.May, 1, 13, 30, 0, 0, loc),
-		Fim:      time.Date(2025, time.May, 1, 15, 30, 0, 0, loc),
-		IdAgenda: idAgenda,
-		Cliente:  cliente,
-	}
+	db.Transaction(func(tx *gorm.DB) error {
+		var cliente agenda.Cliente
+		// Para salvar tudo junto e ficar consistente, pré-ccarregamos
+		// Desnecessauro se o objetivo fosse somente inserir um apontamento sem ver os outros
+		tx.Preload("Apontamentos").First(&cliente, idCliente)
+		fmt.Println("Antes", cliente.Apontamentos)
 
-	db.Create(&apontamento)
-	db.Commit()
+		cliente.Apontamentos = append(cliente.Apontamentos, agenda.Apontamento{
+			Inicio:   time.Date(2025, time.June, 1, 13, 30, 0, 0, loc),
+			Fim:      time.Date(2025, time.June, 1, 15, 30, 0, 0, loc),
+			IdAgenda: idAgenda,
+		})
+
+		fmt.Println("Depois", cliente.Apontamentos)
+		tx.Save(&cliente)
+		return nil
+	})
 }
