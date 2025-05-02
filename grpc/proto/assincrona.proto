@@ -1,0 +1,16 @@
+syntax = "proto3";
+package assincrona;
+
+option go_package = "grpc/proto/assincrona";
+
+service Assincrona {
+  rpc Notificar (Notificacao) returns (Resultado);
+}
+
+message Notificacao {
+  string conteudo = 1;
+}
+
+message Resultado {
+  string status = 1;
+}

@@ -1,0 +1,16 @@
+syntax = "proto3";
+package sincrona;
+
+option go_package = "grpc/proto/sincrona";
+
+service Sincrona {
+  rpc Solicitar (Solicitacao) returns (Resposta);
+}
+
+message Solicitacao {
+  string conteudo = 1;
+}
+
+message Resposta {
+  string conteudo = 1;
+}
