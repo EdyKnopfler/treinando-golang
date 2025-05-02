@@ -15,18 +15,19 @@ func main() {
 	database.RunMigrations(sqlDB)
 
 	gdb = gdb.Debug()
+	tx := gdb.Begin()
+
 	var zimTom database.Pet
-	result := gdb.First(&zimTom, "nome = ?", "ZimTom")
+	result := tx.First(&zimTom, "nome = ?", "ZimTom")
 
 	if errors.Is(result.Error, gorm.ErrRecordNotFound) {
 		fmt.Println("1ª execução: registro não encontrado, foi inserido")
-		gdb.Begin()
-		gdb.Create(database.Pets)
-		gdb.Commit()
+		tx.Create(database.Pets)
+		tx.Commit()
 	} else {
 		fmt.Println(result)
 		fmt.Println(zimTom.Nome, zimTom.Idade)
-		gdb.Rollback()
+		tx.Rollback()
 	}
 
 }
