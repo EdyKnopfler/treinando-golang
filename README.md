@@ -21,7 +21,7 @@ go run grpc/servicoA/main.go
 go run grpc/servicoB/main.go
 
 # Enviar requisição (envia para A, deve chegar no terminal do B)
-curl -X POST -H 'Content-Type: application/json' -d '{"Conteudo": "blelelê"}' localhost:8080/solicita
+curl -X POST -H 'Content-Type: application/json' -d '{"conteudo": "blelelê"}' localhost:8080/solicita
 ```
 
 ## Prompt no Chat-GPT para elaborar o esqueleto do gRPC
